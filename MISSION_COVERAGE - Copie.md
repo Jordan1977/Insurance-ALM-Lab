@@ -1,0 +1,35 @@
+# Mission Coverage Matrix
+
+Maps each mission of the targeted Gestionnaire Actif-Passif (non-life
+insurance) alternance to the business question it answers, the module,
+the technical implementation, the output produced, and the skill it
+evidences.
+
+| Mission | Business Question | Module | Technical Implementation | Output | Skill Demonstrated |
+|---|---|---|---|---|---|
+| Participate in strategic placement / asset allocation strategy | How should assets be positioned relative to liabilities, not just relative to a risk/return frontier? | Strategic Allocation, Investment Guidelines Monitor | `src/optimization.py` (constrained SLSQP), `src/guidelines.py` | Current vs. Liability-Aware allocation, GREEN/AMBER/RED compliance check | Portfolio construction, constrained optimisation |
+| Model financial assets and their performance | What does the instrument-level book look like, and how did it actually perform by risk channel? | Assets, Performance Attribution | `src/asset_model.py` (instrument-level book, cash flows, DV01, convexity), `src/performance_attribution.py` (factor-based, not fabricated, return decomposition) | Instrument book, risk contribution, carry/rate/spread/equity/FX return build-up | Fixed-income valuation, Python financial modelling |
+| Model insurer liabilities | When, and for how much, will non-life claims actually be paid? | Liabilities | `src/liability_model.py` (Exposure x Frequency x Severity claims, claim inflation, PV, duration, tail classification) | Liability cash-flow projection, PV and duration by family, long-tail vs short-tail split | Simplified non-life actuarial cash-flow modelling |
+| Analyse asset-liability adequacy | Do asset cash flows line up with claim payments, in timing and in duration? | ALM Matching, Executive Dashboard | `src/alm_engine.py` (coverage, duration gap, cash-flow matching table, NET-of-reinsurance basis) | Bucketed asset-vs-claim cash-flow matching, coverage ratio | Asset-liability management |
+| Analyse financial risks | Which single factor threatens the economic surplus the most? | Sensitivity / Tornado, Risk contribution, Concentration | `src/sensitivity.py` (isolated rate/credit/equity/FX/frequency/severity shocks), `src/risk_engine.py` | Tornado chart, VaR/CVaR, HHI concentration | Financial risk analysis |
+| Propose / study hedging strategies | How much notional is needed to close the rate, equity or FX gap, and in which direction? | Hedging Lab | `src/hedging_engine.py` (rate, equity, FX hedge sizing) | DV01 gap before/after, stress P&L before/after | Interest-rate, equity and FX hedging mechanics |
+| Develop ALM models | What happens to the surplus distribution over a multi-year closed-book horizon? | Economic Scenarios (dynamic projection) | `src/scenario_generator.py` (closed-book Monte Carlo projection) | Simulated surplus distribution, Surplus-at-Risk | Dynamic ALM projection, stochastic modelling |
+| Develop an Economic Scenario Generator | How does a chosen macro shock move rates, equities, spreads, FX and claims together? | Economic Scenarios | `src/scenario_generator.py` (deterministic shocks + correlated Monte Carlo: GBM equities, Vasicek-style rates, AR(1) inflation, mean-reverting spreads, FX, lognormal claims severity) | Deterministic scenario attribution (reconciles exactly to surplus change), fan-chart-style surplus distribution | Economic Scenario Generator design |
+| Study asset cantonment by product family | Would ring-fencing assets by liability pool improve matching, and at what diversification cost? | Cantonment | `src/cantonment.py` (linear programme, `x(i,j)` exact conservation) | Pool-level coverage, duration gap, allocation table | Constrained optimisation, product segregation analysis |
+| Assess the role of reinsurance in ALM | How much does reinsurance reduce the ultimate claim cost, and does it actually solve near-term liquidity, or just shift it? | Reinsurance | `src/reinsurance.py` (annual-aggregate excess-of-loss: retention, limit, recovery rate, recovery lag, counterparty haircut) | Gross -> recoveries -> net claims table, interim liquidity vs. ultimate net cost, Large-Loss stress comparison | Reinsurance mechanics, gross/net claims reasoning |
+| Manage maturing assets and reinvestment | As bonds mature and coupons/recoveries arrive, how should the resulting cash be reinvested? | Reinvestment & Maturity Management | `src/reinvestment.py` (explicit annual cash-conservation account, 5 named policies, synthetic investable universe) | Year-by-year cash account, policy comparison (duration, DV01 gap, guideline compliance) | Cash-flow projection, reinvestment trade-off analysis |
+| Optimise financial reporting | Can the whole analysis be condensed into a single decision-support document with no invented numbers? | Reporting, Investment Committee Pack | `src/reporting.py`, `pages/20_committee_pack.py` (13 sections, all reused from other engines) | Deterministic executive summary, downloadable HTML report | Financial communication / reporting automation |
+| Optimise risk monitoring | Is the current book, a proposed allocation, or a proposed reinvestment policy within the insurer's own limits? | Investment Guidelines Monitor | `src/guidelines.py` (limits tested against current book, SAA output and reinvestment output alike) | GREEN/AMBER/RED monitor, breach/watchlist table with a consistent headroom sign convention | Risk-monitoring framework design |
+| Analyse macroeconomic and financial trends | What is the current macro backdrop, and how does it map onto an ALM scenario? | Macro & Markets, Macro Transmission | `src/macro_engine.py` (rule-based regime classification) | Regime label, macro -> scenario mapping | Macro-to-ALM transmission reasoning |
+| Monitor financial / regulatory publications | How would relevant ECB/EIOPA/market publications be triaged for ALM relevance? | Research & Regulatory Watch | `pages/14_research_watch.py` | Watch-area table, structured note template (sample data, not a live feed) | Research workflow structuring |
+| Update financial assumptions | What changed, when, and why — and where does it flow through? | Financial Assumptions Hub, Audit Trail | `src/audit_trail.update_assumption()` (single change-control function) | Previous/current assumption table, logged change history | Assumption governance and traceability |
+| Synthesise for decision-makers | What does a committee need to see to decide what to review next? | Investment Committee Pack | Reuses every engine above via `src/analytics.py` | 13-section committee synthesis, "items for review" (never "recommendations") | Decision-support communication |
+
+## Reading this matrix
+
+Every "Output" column is produced by calling the "Technical Implementation"
+listed — nothing in this table is illustrative only; each row corresponds to
+a working, tested page or function in this repository (`tests/` covers the
+corresponding `src/` module). See `QUALITY_REPORT.md` for the test count and
+what was specifically red-teamed and fixed in this pass, and
+`CHANGELOG_V6.md` for what changed since V5.
