@@ -1,0 +1,4 @@
+category,series,value,unit,observation_date,as_of_date,source,source_url,status
+Monetary Policy,ECB Deposit Facility Rate,2.25,percent,2026-07-23,2026-09-05,European Central Bank,https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.mp260723~29f24d99bc.en.html,Observed official
+Inflation,Euro Area HICP Flash Estimate,3.30,percent y/y,2026-08-01,2026-09-05,Eurostat,https://ec.europa.eu/eurostat/web/products-euro-indicators/w/2-01092026-ap,Observed official flash estimate
+FX,EUR/USD ECB Reference Rate,1.1622,USD per EUR,2026-09-04,2026-09-05,European Central Bank,https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html,Observed official
